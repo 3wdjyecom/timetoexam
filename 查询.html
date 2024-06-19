@@ -1,0 +1,18 @@
+<head>
+<!-- css放这，对document.write后面的不生效 -->
+</head>
+<body>
+    <!--<button onclick="aa()">查询</button>-->
+        <script>
+        //function aa() {
+            var information={明冠伯:"一高中31考场25号", 孙盛书绮:"一高中10考场12号", 陈星彤:"一高中18考场10号",陈妙可:"一高中30考场9号",杨梦琪:"一高中13考场18号",徐浩然:"一高中28考场13号",孙诗洋:"一高中20考场22号",马馨:"一高中3考场5号",刘佳琦:"一高中34考场20号",李鸣卓:"一高中24考场10号",韩雨珊:"一高中6考场19号",山峰浩筠:"一高中17考场1号"};
+            var i = prompt("姓名");
+            alert(information[i]);
+            setTimeout(() => {
+            location.reload();
+            }, 3000); 
+            document.write("结果：" + i + " " + information[i] + "<br>" + "三秒后自动刷新页面");
+
+        //}
+    </script>
+</body>
