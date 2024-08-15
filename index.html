@@ -1,155 +1,33 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
-    <title>中考倒计时-breader</title>
-    <meta name="viewport" content="width=320, initial-scale=1">
-    <meta charset="utf-8">
-    <link rel="icon" href="./fav.ico">
-   
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>此页面似乎被breader关闭了呢，即将为你定向</title>
     <style>
-            body, html {
-        min-width: 100%;
-        min-height: 100%;
-        margin: 0;
-        padding: 0;
-        font: Arial 14px;
-      }
-      @keyframes color-change {
-     0% {color: red;}
-     50% {color: green;}
-     100% {color: red;}
-}
-        h1 {
-      animation-name: color-change;
-      animation-duration: 5s;
-      animation-iteration-count: infinite;
-}
-      p {
-      animation-name: color-change;
-      animation-duration: 10s;
-      animation-iteration-count: infinite;
-      line-height: 0.4
-}
-  h2 {
-      animation-name: color-change;
-      animation-duration: 20s;
-      animation-iteration-count: infinite;
-}
-  h1 {
-    text-align: center;
-}
-  h2 {
-    text-align: center;
-}
- .box    {
-    position: fixed;
-    width: 540px;
-    margin: 0 auto;
-    left: 50%;
-    top: 20%;
-    transform: translateX(-50%);  //关键
-}
-  h6 {
-    text-align: center;
-}
-  div{
-    color: red;
-  }
-  a{
-    text-align: center;
-  }
-       nav {
-            background-color: #333;
-            overflow: hidden;
+        body {
+            transition: opacity 0.5s ease; /* 平滑过渡效果 */
         }
-
-        nav a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        nav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
     </style>
-    <!--<link rel="stylesheet" href="style.css"/>-->
-    <!--<script defer src="script.js"></script>-->
-
-  </head>
-  <body>
-    <nav>
-        <a href="./zysx.html">注意事项</a>
-        <a href="https://github.com/3wdjyecom/timetoexam">页面开源</a>
-        <a href="./smalltools.html">小工具</a> 
-        <a href="./people.html">开发人员名单</a>
-        <a href="https://github.com/3wdjyecom/timetoexam/issues/2">问题反馈</a>
-        <a href="https://github.com/3wdjyecom/timetoexam/issues/1">新功能投票</a>
-        <a href="mailto:somebodyzjq@outlook.com">联系我们</a>
-     </nav>  
-      
-    
-
-    <h1>欢迎来到breader的网站</h1>
-    <h1>喜报:中考快到了</h1>
-     <div class="box" style="width: 450px; height: 80px; background-color: #fff100; border: 1px solid #000; border-radius: 10px;">
-      正式中考还有：
-       <h2 id="data"></h2>
-       <br>
-       <br> 
-       
-    </div>
     <script>
-      var countdownElement = document.getElementById("data");
-            var countdownDate = 1750435200000
-            var x = setInterval(function () {
-                var now = new Date().getTime();
-//alert(now);调试内容，请忽略
-                var distance = countdownDate - now;
-//alert(distance);调试内容，请忽略
-                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
- var ms = Math.floor((distance % (1000)));
-                countdownElement.innerHTML = "\n\n\n" + days + " 天 " + hours + " 小时 "
-                    + minutes + " 分 " + seconds + " 秒 " + ms + "毫秒";
- 
-                if (distance < 0) {
-                    clearInterval(x);
-                    countdownElement.innerHTML = "就是今天！";
-                    countdownElement.style.color = "#000";
+        function redirectToWithCountdown(targetUrl) {
+            var countdownElement = document.getElementById('countdown');
+            var countdown = 5;
+            countdownElement.innerHTML = countdown;
+
+            var intervalId = setInterval(function() {
+                countdown--;
+                countdownElement.innerHTML = countdown;
+                if (countdown <= 0) {
+                    clearInterval(intervalId);
+                    window.location.href = targetUrl;
                 }
-            }, 0);
-      
+            }, 1000);
+        }
     </script>
-    <h6>在这里，面包祝大家考入自己理想的高中
-        时间：6月21日至22日 准考证带好 不要迟到
-        <div>所有书带齐！！！！！！！！！！！！！！！</div>
-        <div>天下没有不散的宴席，还希望大家用正确的心态看待毕业</div>
-      </h6>
-      
-      <br>
-      <br>
-      <br>
-      <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-     
-      
-      
-   <div id="xf-MusicPlayer" data-cdnName="https://player.xfyun.club/js"   data-songList="12435980681"></div>
-<script src="https://player.xfyun.club/js/xf-MusicPlayer/js/xf-MusicPlayer.min.js"></script>
-  </body>
+</head>
+<body onload="redirectToWithCountdown('https://redamancy6666.github.io/1/');">
+    <div style="text-align: center;">页面将在 <span id="countdown"></span> 秒后跳转至指定网站。</p >
+</body>
 </html>
