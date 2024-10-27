@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用下拉框切换网页</title>
+    <style>
+        iframe {
+        border: none;
+    }
+    </style>
+</head>
+
+<body>
+    <select id="select">
+        <option id="poem">议论文</option>
+        <option>古诗文</option>
+    </select>
+    
+    <button onclick="go()">前往</button><br>
+    <iframe id="iframe" width="1200" height="1000" src="1"></iframe>
+    <script>
+        function go(){
+            var select;
+            var selected;
+            var iframe;
+            var src;
+            select = document.getElementById("select");
+            selected = select.selectedIndex;
+            //alert(select.options[selected].value); 
+            iframe = document.getElementById("iframe");
+            src = "./" + select.options[selected].value + ".html";
+            iframe.src = src;
+        }
+    </script>
+</body>
+</html>
