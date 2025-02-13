@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算题生成器-by Breader</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        h2 {
+           text-align: center;
+        }
+        h4 {
+           text-align: center;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        select, button {
+            padding: 10px 20px;
+            background-color: #28a7a3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        select:hover, button:hover {
+            background-color: rgb(104, 9, 30);
+        }
+        .problems {
+            margin-top: 20px;
+        }
+        .problem {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>计算题生成器</h2>
+        <h4>由于作者朋友考物理算热值算错了，
+            被罚做计算题，特此纪念。</h4>
+        <div class="form-group">
+            <label for="maxNumber">最大数值:</label>
+            <input type="number" id="maxNumber" value="100">
+        </div>
+        <div class="form-group">
+            <label for="maxQuestions">最大数量:</label>
+            <input type="number" id="maxQuestions" value="5">
+        </div>
+        <div class="form-group">
+            <label for="decimalPlaces">小数位数 (0表示不使用小数):</label>
+            <input type="number" id="decimalPlaces" value="0">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="integerDivision" checked>
+            <label for="integerDivision" style="text-align: center;">除法结果是否为整数:</label>
+           
+        </div>
+        <div class="form-group">
+            <label for="operationType">运算类型:</label>
+            <select id="operationType">
+                <option value="addition">加法</option>
+                <option value="subtraction">减法</option>
+                <option value="multiplication">乘法</option>
+                <option value="division">除法</option>
+                <option value="mixed">四则混合</option>
+            </select>
+        </div>
+        <button onclick="generateProblems()">生成题目</button>
+        <button id="exportBtn" onclick="exportPDF()">导出PDF</button>
+        <div class="problems" id="problems"></div>
+    </div>
+
+    <script>
+        function generateProblems() {
+            const maxNumber = parseFloat(document.getElementById('maxNumber').value);
+            const maxQuestions = parseInt(document.getElementById('maxQuestions').value);
+            const decimalPlaces = parseInt(document.getElementById('decimalPlaces').value);
+            const operationType = document.getElementById('operationType').value;
+            const integerDivision = document.getElementById('integerDivision').checked;
+            const problemsContainer = document.getElementById('problems');
+            problemsContainer.innerHTML = '';
+
+            for (let i = 0; i < maxQuestions; i++) {
+                let problem;
+                switch (operationType) {
+                    case 'addition':
+                        problem = createAdditionProblem(maxNumber, decimalPlaces);
+                        break;
+                    case 'subtraction':
+                        problem = createSubtractionProblem(maxNumber, decimalPlaces);
+                        break;
+                    case 'multiplication':
+                        problem = createMultiplicationProblem(maxNumber, decimalPlaces);
+                        break;
+                    case 'division':
+                        problem = createDivisionProblem(maxNumber, decimalPlaces, integerDivision);
+                        break;
+                    case 'mixed':
+                        problem = createMixedProblem(maxNumber, decimalPlaces, integerDivision);
+                        break;
+                    default:
+                        problem = '未知的运算类型';
+                }
+                const problemElement = document.createElement('div');
+                problemElement.className = 'problem';
+                problemElement.textContent = problem;
+                problemsContainer.appendChild(problemElement);
+            }
+        }
+
+        function getRandomNumber(maxNumber, decimalPlaces) {
+            let randomNumber = Math.random() * maxNumber;
+            if (decimalPlaces > 0) {
+                randomNumber = parseFloat(randomNumber.toFixed(decimalPlaces));
+            } else {
+                randomNumber = Math.floor(randomNumber);
+            }
+            return randomNumber;
+        }
+
+        function createAdditionProblem(maxNumber, decimalPlaces) {
+            const num1 = getRandomNumber(maxNumber, decimalPlaces);
+            const num2 = getRandomNumber(maxNumber, decimalPlaces);
+            return `${num1} + ${num2} =`;
+        }
+
+        function createSubtractionProblem(maxNumber, decimalPlaces) {
+            let num1 = getRandomNumber(maxNumber, decimalPlaces);
+            let num2 = getRandomNumber(maxNumber, decimalPlaces);
+            if (num2 > num1) {
+                [num1, num2] = [num2, num1];
+            }
+            return `${num1} - ${num2} =`;
+        }
+
+        function createMultiplicationProblem(maxNumber, decimalPlaces) {
+            const num1 = getRandomNumber(maxNumber, decimalPlaces);
+            const num2 = getRandomNumber(maxNumber, decimalPlaces);
+            return `${num1} × ${num2} =`;
+        }
+
+        function createDivisionProblem(maxNumber, decimalPlaces, integerDivision) {
+            let num1 = getRandomNumber(maxNumber, decimalPlaces);
+            let num2 = getRandomNumber(maxNumber, decimalPlaces);
+            if (num2 === 0) {
+                num2 = 1;
+            }
+
+            if (integerDivision) {
+                if (decimalPlaces > 0) {
+                    num1 = getRandomNumber(maxNumber * num2, decimalPlaces);
+                } else {
+                    num1 = Math.floor(num1) * Math.floor(num2);
+                }
+            }
+
+            return `${num1} ÷ ${num2} =`;
+        }
+
+        function createMixedProblem(maxNumber, decimalPlaces, integerDivision) {
+            const operations = ['+', '-', '×', '÷'];
+            const operation = operations[Math.floor(Math.random() * operations.length)];
+            let num1, num2;
+            do {
+                num1 = getRandomNumber(maxNumber, decimalPlaces);
+                num2 = getRandomNumber(maxNumber, decimalPlaces);
+            } while (operation === '÷' && num2 === 0);
+
+            if (operation === '÷' && integerDivision) {
+                if (decimalPlaces > 0) {
+                    num1 = getRandomNumber(maxNumber * num2, decimalPlaces);
+                } else {
+                    num1 = Math.floor(num1) * Math.floor(num2);
+                }
+            }
+
+            return `${num1} ${operation} ${num2} =`;
+        }
+
+        function exportPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const problemsContainer = document.getElementById('problems');
+            const problems = problemsContainer.getElementsByTagName('div');
+            let textPosition = 20; // 初始文本位置
+
+            for (let i = 0; i < problems.length; i++) {
+                if (textPosition > 280) { // 如果超出一页，添加新页
+                    doc.addPage();
+                    textPosition = 20;
+                }
+                doc.text(problems[i].textContent, 10, textPosition);
+                textPosition += 15; // 每个问题之间间隔15单位
+            }
+
+            doc.save('计算题.pdf'); // 导出PDF文件
+        }
+    </script>
+</body>
+</html>
