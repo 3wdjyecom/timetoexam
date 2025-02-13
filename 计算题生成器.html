@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>计算题生成器-by Breader</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
     <style>
         h2 {
            text-align: center;
@@ -61,7 +60,15 @@
             margin-bottom: 10px;
         }
         .color-picker {
-            margin-bottom: 15px;
+            padding: 10px 20px;
+            background-color: #28a7a3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .color-picker:hover {
+            background-color: rgb(104, 9, 30);
         }
     </style>
 </head>
@@ -103,6 +110,7 @@
        
         <button onclick="generateProblems()">生成题目</button>
         <button id="exportBtn" onclick="exportPDF()">导出PDF</button>
+        <button id="exportAnswersBtn" onclick="exportAnswersPDF()">导出答案PDF</button>
         <div class="problems" id="problems"></div>
         <div class="answers" id="answers"></div>
     </div>
@@ -116,7 +124,7 @@
             <label for="lineSpacing">行间距 (必须大于4，否则会看不清楚):</label>
             <input type="number" id="lineSpacing" value="15" min="5" placeholder="单位：磅 若过大会浪费纸">
         </div>
-        <div class="form-group color-picker">
+        <div class="form-group">
             <label for="fontColor">PDF字体颜色:</label>
             <input type="color" id="fontColor" value="#000000">
         </div>
@@ -167,9 +175,10 @@
                 problemElement.textContent = problem;
                 problemsContainer.appendChild(problemElement);
 
+                const answer = calculateAnswer(problem);
+                answers.push(answer);
+
                 if (showAnswers) {
-                    const answer = calculateAnswer(problem);
-                    answers.push(answer);
                     const answerElement = document.createElement('div');
                     answerElement.className = 'answer';
                     answerElement.textContent = `答案: ${answer}`;
@@ -179,7 +188,7 @@
         }
 
         function calculateAnswer(problem) {
-            const [expression] = problem.split('=');
+            const [expression,] = problem.split('=');
             return eval(expression.replace('×', '*').replace('÷', '/'));
         }
 
@@ -256,43 +265,61 @@
             const { jsPDF } = window.jspdf;
             const fontSize = parseInt(document.getElementById('fontSize').value);
             const lineSpacing = parseInt(document.getElementById('lineSpacing').value);
-            const fontColor = document.getElementById('fontColor').value.replace('#', '');
+            const fontColor = document.getElementById('fontColor').value;
             const doc = new jsPDF();
+            const problemsContainer = document.getElementById('problems');
+            const answersContainer = document.getElementById('answers');
+            const showAnswers = document.getElementById('showAnswers').checked;
+            const problemsElements = problemsContainer.getElementsByTagName('div');
+            const answersElements = answersContainer.getElementsByTagName('div');
             let textPosition = 20; // 初始文本位置
 
-            doc.setFontSize(fontSize);
-            for (let i = 0; i < problems.length; i++) {
+            for (let i = 0; i < problemsElements.length; i++) {
                 if (textPosition > 280) { // 如果超出一页，添加新页
                     doc.addPage();
                     textPosition = 20;
                 }
-                doc.setTextColor(parseInt(fontColor.substring(0, 2), 16), parseInt(fontColor.substring(2, 4), 16), parseInt(fontColor.substring(4, 6), 16));
-                doc.text(problems[i], 10, textPosition);
-                textPosition += lineSpacing; // 每个问题之间间隔为lineSpacing单位
-            }
-
-            const showAnswers = document.getElementById('showAnswers').checked;
-            if (showAnswers && answers.length > 0) {
-                if (textPosition > 280) { // 如果超出一页，添加新页
-                    doc.addPage();
-                    textPosition = 20;
-                }
-                doc.setTextColor(0, 0, 0); // 设置答案为黑色
                 doc.setFontSize(fontSize);
-                doc.text('参考答案:', 10, textPosition);
-                textPosition += lineSpacing; // 标题和答案之间间隔为lineSpacing单位
+                doc.setTextColor(fontColor);
+                doc.text(problemsElements[i].textContent, 10, textPosition);
+                textPosition += lineSpacing; // 每个问题之间间隔为lineSpacing单位
 
-                for (let i = 0; i < answers.length; i++) {
+                if (showAnswers) {
                     if (textPosition > 280) { // 如果超出一页，添加新页
                         doc.addPage();
                         textPosition = 20;
                     }
-                    doc.text(`答案 ${i+1}: ${answers[i]}`, 10, textPosition);
+                    doc.text(answersElements[i].textContent, 10, textPosition);
                     textPosition += lineSpacing; // 每个答案之间间隔为lineSpacing单位
                 }
             }
 
             doc.save('计算题.pdf'); // 导出PDF文件
+        }
+
+        function exportAnswersPDF() {
+            const { jsPDF } = window.jspdf;
+            const fontSize = parseInt(document.getElementById('fontSize').value);
+            const lineSpacing = parseInt(document.getElementById('lineSpacing').value);
+            const fontColor = document.getElementById('fontColor').value;
+            const doc = new jsPDF();
+            let textPosition = 20; // 初始文本位置
+
+            doc.setFontSize(fontSize);
+            doc.setTextColor(fontColor);
+            doc.text(`参考答案`, 10, textPosition);
+            textPosition += lineSpacing; // 标题后间隔为lineSpacing单位
+
+            for (let i = 0; i < answers.length; i++) {
+                if (textPosition > 280) { // 如果超出一页，添加新页
+                    doc.addPage();
+                    textPosition = 20;
+                }
+                doc.text(`题目 ${i + 1}: 答案: ${answers[i]}`, 10, textPosition);
+                textPosition += lineSpacing; // 每个答案之间间隔为lineSpacing单位
+            }
+
+            doc.save('参考答案.pdf'); // 导出PDF文件
         }
     </script>
 </body>
