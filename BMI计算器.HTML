@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .calculator {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .calculator h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .calculator input, .calculator button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .calculator button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .calculator button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h2>BMI计算器</h2>
+        <label for="weight">体重（公斤）：</label>
+        <input type="number" id="weight" step="0.01" required>
+        <label for="height">身高（米）：</label>
+        <input type="number" id="height" step="0.01" required>
+        <button onclick="calculateBMI()">计算BMI</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            
+            if (isNaN(weight) || isNaN(height) || height <= 0) {
+                document.getElementById('result').innerText = '请输入有效的体重和身高';
+                return;
+            }
+
+            const bmi = weight / (height * height);
+            let category = '';
+
+            if (bmi < 18.5) {
+                category = '体重过轻';
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                category = '正常体重';
+            } else if (bmi >= 25 && bmi < 29.9) {
+                category = ' overweight';
+            } else {
+                category = '肥胖';
+            }
+
+            document.getElementById('result').innerText = `您的BMI是：${bmi.toFixed(2)}，属于${category}范围`;
+        }
+    </script>
+</body>
+</html>
