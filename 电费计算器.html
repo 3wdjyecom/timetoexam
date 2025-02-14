@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阶梯电费计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+           
+        }
+        .calculator {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .calculator h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .calculator input, .calculator button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .calculator button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .calculator button:hover {
+            background-color: rgb(255, 1, 1);
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h2>阶梯电费计算器</h2>
+        <label for="price1">第一阶梯价格（元/度）：</label>
+        <input type="number" id="price1" step="0.01" required>
+        <label for="limit1">第一阶梯上限（度）：</label>
+        <input type="number" id="limit1" required>
+        <label for="price2">第二阶梯价格（元/度）：</label>
+        <input type="number" id="price2" step="0.01" required>
+        <label for="limit2">第二阶梯上限（度）：</label>
+        <input type="number" id="limit2" required>
+        <label for="price3">第三阶梯价格（元/度）：</label>
+        <input type="number" id="price3" step="0.01" required>
+        <label for="usage">用电量（度）：</label>
+        <input type="number" id="usage" required>
+        <button onclick="calculate()">计算电费</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            const price1 = parseFloat(document.getElementById('price1').value);
+            const limit1 = parseFloat(document.getElementById('limit1').value);
+            const price2 = parseFloat(document.getElementById('price2').value);
+            const limit2 = parseFloat(document.getElementById('limit2').value);
+            const price3 = parseFloat(document.getElementById('price3').value);
+            const usage = parseFloat(document.getElementById('usage').value);
+
+            let totalCost = 0;
+
+            if (usage <= limit1) {
+                totalCost = usage * price1;
+            } else if (usage <= limit2) {
+                totalCost = limit1 * price1 + (usage - limit1) * price2;
+            } else {
+                totalCost = limit1 * price1 + (limit2 - limit1) * price2 + (usage - limit2) * price3;
+            }
+
+            document.getElementById('result').innerText = `总电费为：${totalCost.toFixed(2)}元`;
+        }
+    </script>
+</body>
+</html>
