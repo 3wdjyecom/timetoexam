@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间日期显示</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            flex-direction: column;
+            background-image: url(./1.jpg);
+        }
+        .clock-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px); /* 添加毛玻璃效果 */
+            -webkit-backdrop-filter: blur(10px); /* 兼容Safari */
+        }
+        .time {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        .date {
+            font-size: 24px;
+            color: #61dafb;
+            margin-bottom: 10px;
+        }
+        .days-left {
+            font-size: 24px;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        .quote {
+            font-size: 20px;
+            color: #ffffff;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .quote:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .fortune {
+            font-size: 20px;
+            color: #ffffff;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .fortune:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .refresh-button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .refresh-button:hover {
+            background-color: #0056b3;
+        }
+        .refresh-button:active {
+            box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="clock-container">
+        <h1 style="text-align: center;">你好，访客！</h1>
+        <div class="time" id="time"></div>
+        <div class="date" id="date"></div>
+        <div class="days-left" id="days-left"></div>
+        <div class="quote" id="quote" onclick="copyText()"></div>
+        <div class="fortune" id="fortune" onclick="copyFortune()"></div>
+    </div>
+
+    <div class="button-container">
+        <button class="refresh-button" onclick="refreshContent()">刷新内容</button>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const targetDate = new Date('2024-06-23');
+            const daysPassed = Math.abs(Math.floor((now - targetDate) / (1000 * 60 * 60 * 24)));
+
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0'); // 修正这里的拼写错误
+            const formattedTime = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('time').textContent = formattedTime;
+
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = now.toLocaleDateString('zh-CN', options);
+            document.getElementById('date').textContent = formattedDate;
+
+            document.getElementById('days-left').textContent = `网站已经安全运营 ${daysPassed} 天`;
+        }
+
+        const quotes = [
+            "学而不思则罔，思而不学则殆。——孔子",
+            "生活即战斗。——伏尔泰",
+            "时间是世界上最公平的东西，从不亏待任何一个人。——列宁",
+            "学而时习之，不亦说乎？——孔子",
+            "人的一切痛苦，本质上都是对自己无能的愤怒。——王小波"
+        ];
+
+        const fortunes = [
+            "今天是一个充满机会的好日子，相信自己，你能够克服一切困难。",
+            "你的直觉非常准，多听从内心的声音，它会引导你走向成功。",
+            "谨慎行事，今天可能会遇到一些挑战，但只要保持冷静，就能找到解决办法。",
+            "与朋友和家人共度时光，你的关系会因此变得更加亲密。",
+            "专注于你的目标，今天是实现梦想的好时机，不要放弃。"
+        ];
+
+        function getRandomQuote() {
+            return quotes[Math.floor(Math.random() * quotes.length)];
+        }
+
+        function getRandomFortune() {
+            return fortunes[Math.floor(Math.random() * fortunes.length)];
+        }
+
+        function copyText() {
+            const quoteElement = document.getElementById('quote');
+            const tempInput = document.createElement('textarea');
+            tempInput.value = quoteElement.textContent;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('名言已复制到剪贴板！');
+        }
+
+        function copyFortune() {
+            const fortuneElement = document.getElementById('fortune');
+            const tempInput = document.createElement('textarea');
+            tempInput.value = fortuneElement.textContent;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('运势已复制到剪贴板！');
+        }
+
+        // 更新名人名言
+        function updateQuote() {
+            document.getElementById('quote').textContent = getRandomQuote();
+        }
+
+        // 更新今日运势
+        function updateFortune() {
+            document.getElementById('fortune').textContent = getRandomFortune();
+        }
+
+        // 每秒更新一次时间
+        setInterval(updateClock, 1000);
+        // 初始化显示时间
+        updateClock();
+
+        // 初始化显示名人名言
+        updateQuote();
+
+        // 初始化显示今日运势
+        updateFortune();
+
+        // 刷新内容
+        function refreshContent() {
+            updateQuote();
+            updateFortune();
+        }
+    </script>
+</body>
+</html>
